@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito - TechStore</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>⚡ TechStore</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Inicio</a>
+                <a href="productos.html">Productos</a>
+                <a href="index.html#contacto">Contacto</a>
+            </nav>
+            <div class="cart-icon" onclick="window.location.href='carrito.html'">
+                🛒 <span id="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Carrito -->
+    <div class="cart-container">
+        <h2 class="section-title">Tu Carrito de Compras</h2>
+        
+        <div id="cart-items">
+            <!-- Los items del carrito se cargarán dinámicamente -->
+        </div>
+
+        <div class="cart-summary">
+            <h3>Resumen del Pedido</h3>
+            <div style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                <span>Subtotal:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                <span>Envío:</span>
+                <span>Gratis</span>
+            </div>
+            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border-color);">
+            <div class="cart-total" style="display: flex; justify-content: space-between;">
+                <span>Total:</span>
+                <span id="cart-total-final">$0.00</span>
+            </div>
+            <button class="btn-add-to-cart" onclick="procesarCheckout()" style="margin-top: 1rem;">
+                Proceder al Pago
+            </button>
+            <button class="btn-primary" onclick="window.location.href='productos.html'" 
+                    style="margin-top: 1rem; width: 100%; text-align: center; background: transparent; 
+                    color: var(--primary-color); border: 2px solid var(--primary-color);">
+                Seguir Comprando
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TechStore</h3>
+                    <p>Tu tienda de confianza en tecnología</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <p>Email: info@techstore.com</p>
+                    <p>Tel: +1 234 567 890</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Síguenos</h3>
+                    <p>Facebook | Instagram | Twitter</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TechStore. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="productos.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Actualizar también el total final
+        document.addEventListener('DOMContentLoaded', function() {
+            const totalFinal = document.getElementById('cart-total-final');
+            if (totalFinal) {
+                totalFinal.textContent = document.getElementById('cart-total').textContent;
+            }
+        });
+    </script>
+</body>
+</html>
