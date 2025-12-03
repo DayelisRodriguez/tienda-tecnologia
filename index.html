@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStore - Tu Tienda de Tecnología</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>⚡ TechStore</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Inicio</a>
+                <a href="productos.html">Productos</a>
+                <a href="#contacto">Contacto</a>
+            </nav>
+            <div class="cart-icon" onclick="window.location.href='carrito.html'">
+                🛒 <span id="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Tecnología de Última Generación</h2>
+            <p>Encuentra los mejores dispositivos al mejor precio</p>
+            <a href="productos.html" class="btn-primary">Ver Productos</a>
+        </div>
+    </section>
+
+    <!-- Productos Destacados -->
+    <section class="featured-products">
+        <div class="container">
+            <h2 class="section-title">Productos Destacados</h2>
+            <div class="products-grid" id="featured-products">
+                <!-- Los productos se cargarán dinámicamente -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Categorías -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">Categorías</h2>
+            <div class="categories-grid">
+                <div class="category-card">
+                    <h3>💻 Laptops</h3>
+                    <p>Portátiles de alta gama</p>
+                </div>
+                <div class="category-card">
+                    <h3>📱 Smartphones</h3>
+                    <p>Los últimos modelos</p>
+                </div>
+                <div class="category-card">
+                    <h3>⌚ Accesorios</h3>
+                    <p>Complementa tu tecnología</p>
+                </div>
+                <div class="category-card">
+                    <h3>🎮 Gaming</h3>
+                    <p>Para los gamers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contacto">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TechStore</h3>
+                    <p>Tu tienda de confianza en tecnología</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <p>Email: info@techstore.com</p>
+                    <p>Tel: +1 234 567 890</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Síguenos</h3>
+                    <p>Facebook | Instagram | Twitter</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TechStore. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="productos.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
