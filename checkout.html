@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Tienda de Computadoras</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>🛒 TechStore</h1>
+        </div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="index.html#productos">Productos</a>
+            <a href="#carrito">Carrito</a>
+        </nav>
+    </header>
+
+    <main class="checkout-container">
+        <h2><i class="fas fa-shopping-bag"></i> Finalizar Compra</h2>
+        
+        <div class="checkout-grid">
+            <!-- Columna izquierda: Información de pago -->
+            <div class="checkout-form">
+                <h3><i class="fas fa-credit-card"></i> Método de Pago</h3>
+                
+                <!-- Opciones de pago -->
+                <div class="metodos-pago">
+                    <div class="metodo-opcion active" data-metodo="tarjeta">
+                        <i class="fab fa-cc-mastercard"></i>
+                        <span>Tarjeta de Crédito/Débito</span>
+                    </div>
+                    
+                    <div class="metodo-opcion" data-metodo="paypal">
+                        <i class="fab fa-paypal"></i>
+                        <span>PayPal</span>
+                    </div>
+                    
+                    <div class="metodo-opcion" data-metodo="transferencia">
+                        <i class="fas fa-university"></i>
+                        <span>Transferencia Bancaria</span>
+                    </div>
+                </div>
+
+                <!-- Formulario de tarjeta (visible por defecto) -->
+                <div class="form-pago" id="form-tarjeta">
+                    <div class="input-group">
+                        <label for="numero-tarjeta"><i class="far fa-credit-card"></i> Número de Tarjeta</label>
+                        <input type="text" id="numero-tarjeta" placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    
+                    <div class="input-doble">
+                        <div class="input-group">
+                            <label for="fecha-expiracion"><i class="far fa-calendar-alt"></i> Fecha de Expiración</label>
+                            <input type="text" id="fecha-expiracion" placeholder="MM/AA" maxlength="5">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="cvv"><i class="fas fa-lock"></i> CVV</label>
+                            <input type="password" id="cvv" placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="nombre-tarjeta"><i class="far fa-user"></i> Nombre en la Tarjeta</label>
+                        <input type="text" id="nombre-tarjeta" placeholder="JUAN PEREZ GARCIA">
+                    </div>
+                </div>
+
+                <!-- Formulario PayPal (oculto por defecto) -->
+                <div class="form-pago" id="form-paypal" style="display: none;">
+                    <div class="paypal-info">
+                        <i class="fab fa-paypal fa-3x"></i>
+                        <p>Serás redirigido a PayPal para completar tu pago de forma segura.</p>
+                        <button class="btn-paypal" id="btn-paypal">
+                            <i class="fab fa-paypal"></i> Pagar con PayPal
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulario Transferencia (oculto por defecto) -->
+                <div class="form-pago" id="form-transferencia" style="display: none;">
+                    <div class="transferencia-info">
+                        <h4><i class="fas fa-university"></i> Datos Bancarios</h4>
+                        <p><strong>Banco:</strong> BBVA</p>
+                        <p><strong>CLABE:</strong> 012 180 00123456789</p>
+                        <p><strong>Beneficiario:</strong> TechStore SA de CV</p>
+                        <p><strong>Referencia:</strong> <span id="referencia">TECH-2024-001</span></p>
+                        <p class="nota">Envía el comprobante a: comprobantes@techstore.com</p>
+                    </div>
+                </div>
+
+                <button class="btn-pagar" id="btn-procesar-pago">
+                    <i class="fas fa-lock"></i> Pagar $<span id="total-pagar">0.00</span> MXN
+                </button>
+            </div>
+
+            <!-- Columna derecha: Resumen del pedido -->
+            <div class="resumen-pedido">
+                <h3><i class="fas fa-receipt"></i> Resumen del Pedido</h3>
+                
+                <div class="productos-resumen" id="productos-resumen">
+                    <!-- Los productos se cargan aquí con JavaScript -->
+                </div>
+                
+                <div class="totales">
+                    <div class="total-linea">
+                        <span>Subtotal:</span>
+                        <span id="subtotal-resumen">$0.00 MXN</span>
+                    </div>
+                    <div class="total-linea">
+                        <span>Envío:</span>
+                        <span id="envio-resumen">$99.00 MXN</span>
+                    </div>
+                    <div class="total-linea">
+                        <span>IVA (16%):</span>
+                        <span id="iva-resumen">$0.00 MXN</span>
+                    </div>
+                    <div class="total-linea total-final">
+                        <span><strong>Total:</strong></span>
+                        <span><strong id="total-resumen">$0.00 MXN</strong></span>
+                    </div>
+                </div>
+                
+                <div class="proteccion-compra">
+                    <i class="fas fa-shield-alt"></i>
+                    <p>Tu compra está protegida. No compartimos tus datos de pago.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de confirmación -->
+    <div class="modal" id="modal-exito">
+        <div class="modal-contenido">
+            <i class="fas fa-check-circle"></i>
+            <h2>¡Pago Exitoso!</h2>
+            <p>Tu pedido ha sido procesado correctamente.</p>
+            <p><strong>Número de orden:</strong> <span id="numero-orden">TECH-ORD-2024-001</span></p>
+            <p>Recibirás un correo de confirmación en breve.</p>
+            <button class="btn-volver" onclick="window.location.href='index.html'">
+                <i class="fas fa-home"></i> Volver a la Tienda
+            </button>
+        </div>
+    </div>
+
+    <script src="checkout.js"></script>
+</body>
+</html>
