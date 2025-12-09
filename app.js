@@ -1,191 +1,268 @@
-// Carrito de compras (almacenado en memoria, sin localStorage)
-let carrito = [];
+// app.js - Funciones generales de la tienda
 
-// Actualizar contador del carrito
-function actualizarContadorCarrito() {
-    const contador = document.getElementById('cart-count');
-    if (contador) {
-        const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-        contador.textContent = total;
+// Datos de productos (puedes mover esto a productos.js si prefieres)
+const productos = [
+    {
+        id: 1,
+        nombre: "Laptop Gaming Pro",
+        descripcion: "RTX 4080, 32GB RAM, 2TB SSD",
+        precio: 25999,
+        categoria: "laptops",
+        imagen: "img/laptop-gaming.jpg"
+    },
+    {
+        id: 2,
+        nombre: "MacBook Air M2",
+        descripcion: "Chip M2, 8GB RAM, 256GB SSD",
+        precio: 19999,
+        categoria: "laptops",
+        imagen: "img/macbook-air.jpg"
+    },
+    {
+        id: 3,
+        nombre: "PC Gamer Armada",
+        descripcion: "Ryzen 7, RTX 3060, 16GB RAM",
+        precio: 18999,
+        categoria: "desktops",
+        imagen: "img/pc-gamer.jpg"
+    },
+    {
+        id: 4,
+        nombre: "Monitor 4K 32\"",
+        descripcion: "Resolución 4K, 144Hz, HDR",
+        precio: 8999,
+        categoria: "monitores",
+        imagen: "img/monitor-4k.jpg"
+    },
+    {
+        id: 5,
+        nombre: "Teclado Mecánico RGB",
+        descripcion: "Switches Blue, Retroiluminación RGB",
+        precio: 1299,
+        categoria: "accesorios",
+        imagen: "img/teclado-mecanico.jpg"
+    },
+    {
+        id: 6,
+        nombre: "Mouse Gaming Pro",
+        descripcion: "25,600 DPI, 8 botones programables",
+        precio: 899,
+        categoria: "accesorios",
+        imagen: "img/mouse-gaming.jpg"
     }
+];
+
+// Función para cargar productos destacados
+function cargarProductosDestacados() {
+    const container = document.getElementById('featured-products');
+    
+    if (!container) return;
+    
+    // Tomar solo 4 productos como destacados
+    const destacados = productos.slice(0, 4);
+    
+    container.innerHTML = '';
+    
+    destacados.forEach(producto => {
+        const productoHTML = `
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="${producto.imagen}" alt="${producto.nombre}">
+                </div>
+                <div class="product-info">
+                    <h3>${producto.nombre}</h3>
+                    <p class="product-description">${producto.descripcion}</p>
+                    <div class="product-price">
+                        <span class="price">$${producto.precio.toLocaleString()} MXN</span>
+                        <button class="btn-add-to-cart" onclick="agregarAlCarrito(${producto.id})">
+                            🛒 Agregar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.innerHTML += productoHTML;
+    });
 }
 
-// Agregar producto al carrito
-function agregarAlCarrito(productoId) {
-    const producto = obtenerProductoPorId(productoId);
-    if (!producto) return;
-
-    const itemExistente = carrito.find(item => item.id === productoId);
+// Función para agregar producto al carrito
+window.agregarAlCarrito = function(productoId) {
+    const producto = productos.find(p => p.id === productoId);
     
-    if (itemExistente) {
-        itemExistente.cantidad++;
+    if (!producto) {
+        alert('Producto no encontrado');
+        return;
+    }
+    
+    // Obtener carrito actual
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    
+    // Verificar si el producto ya está en el carrito
+    const productoExistente = carrito.find(p => p.id === productoId);
+    
+    if (productoExistente) {
+        // Incrementar cantidad
+        productoExistente.cantidad += 1;
     } else {
+        // Agregar nuevo producto
         carrito.push({
             ...producto,
             cantidad: 1
         });
     }
     
-    actualizarContadorCarrito();
-    mostrarNotificacion('Producto agregado al carrito');
-}
-
-// Eliminar producto del carrito
-function eliminarDelCarrito(productoId) {
-    carrito = carrito.filter(item => item.id !== productoId);
-    actualizarContadorCarrito();
-    if (window.location.pathname.includes('carrito.html')) {
-        renderizarCarrito();
-    }
-}
-
-// Actualizar cantidad de producto
-function actualizarCantidad(productoId, nuevaCantidad) {
-    const item = carrito.find(item => item.id === productoId);
-    if (item && nuevaCantidad > 0) {
-        item.cantidad = nuevaCantidad;
-        actualizarContadorCarrito();
-        renderizarCarrito();
-    }
-}
-
-// Obtener total del carrito
-function obtenerTotal() {
-    return carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
-}
-
-// Renderizar productos en la página principal
-function renderizarProductosDestacados() {
-    const container = document.getElementById('featured-products');
-    if (!container) return;
-
-    const productosDestacados = obtenerProductosDestacados();
+    // Guardar en localStorage
+    localStorage.setItem('carrito', JSON.stringify(carrito));
     
-    container.innerHTML = productosDestacados.map(producto => `
-        <div class="product-card">
-            <img src="${producto.imagen}" alt="${producto.nombre}" class="product-image">
-            <h3>${producto.nombre}</h3>
-            <p>${producto.descripcion}</p>
-            <div class="product-price">$${producto.precio.toFixed(2)}</div>
-            <button class="btn-add-to-cart" onclick="agregarAlCarrito(${producto.id})">
-                Agregar al Carrito
-            </button>
-        </div>
-    `).join('');
-}
-
-// Renderizar todos los productos en la página de productos
-function renderizarTodosProductos() {
-    const container = document.getElementById('all-products');
-    if (!container) return;
-
-    const todosProductos = obtenerProductos();
-    
-    container.innerHTML = todosProductos.map(producto => `
-        <div class="product-card">
-            <img src="${producto.imagen}" alt="${producto.nombre}" class="product-image">
-            <h3>${producto.nombre}</h3>
-            <p>${producto.descripcion}</p>
-            <div class="product-price">$${producto.precio.toFixed(2)}</div>
-            <button class="btn-add-to-cart" onclick="agregarAlCarrito(${producto.id})">
-                Agregar al Carrito
-            </button>
-        </div>
-    `).join('');
-}
-
-// Renderizar carrito
-function renderizarCarrito() {
-    const container = document.getElementById('cart-items');
-    const totalElement = document.getElementById('cart-total');
-    
-    if (!container) return;
-
-    if (carrito.length === 0) {
-        container.innerHTML = '<p style="text-align: center; padding: 2rem;">Tu carrito está vacío</p>';
-        if (totalElement) totalElement.textContent = '$0.00';
-        return;
-    }
-
-    container.innerHTML = carrito.map(item => `
-        <div class="cart-item">
-            <img src="${item.imagen}" alt="${item.nombre}" class="cart-item-image">
-            <div class="cart-item-details">
-                <h3>${item.nombre}</h3>
-                <p>Precio unitario: $${item.precio.toFixed(2)}</p>
-                <p>Subtotal: $${(item.precio * item.cantidad).toFixed(2)}</p>
-            </div>
-            <div class="cart-item-actions">
-                <button onclick="actualizarCantidad(${item.id}, ${item.cantidad - 1})">-</button>
-                <span>${item.cantidad}</span>
-                <button onclick="actualizarCantidad(${item.id}, ${item.cantidad + 1})">+</button>
-                <button onclick="eliminarDelCarrito(${item.id})" style="margin-left: 1rem; color: red;">
-                    Eliminar
-                </button>
-            </div>
-        </div>
-    `).join('');
-
-    if (totalElement) {
-        totalElement.textContent = `$${obtenerTotal().toFixed(2)}`;
-    }
-}
-
-// Procesar checkout
-function procesarCheckout() {
-    if (carrito.length === 0) {
-        mostrarNotificacion('El carrito está vacío');
-        return;
-    }
-    
-    // Aquí iría la lógica de procesamiento de pago
-    mostrarNotificacion('¡Pedido realizado con éxito! (simulado)');
-    carrito = [];
+    // Actualizar contador
     actualizarContadorCarrito();
     
-    setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 2000);
+    // Mostrar notificación
+    mostrarNotificacion(`${producto.nombre} agregado al carrito`);
+};
+
+// Función para actualizar contador del carrito
+function actualizarContadorCarrito() {
+    const cartCounts = document.querySelectorAll('#cart-count');
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    const total = carrito.reduce((sum, producto) => sum + producto.cantidad, 0);
+    
+    cartCounts.forEach(element => {
+        element.textContent = total;
+    });
 }
 
-// Mostrar notificación
+// Función para mostrar notificación
 function mostrarNotificacion(mensaje) {
-    const notif = document.createElement('div');
-    notif.textContent = mensaje;
-    notif.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: #10b981;
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        z-index: 1000;
-        animation: slideIn 0.3s ease;
+    // Crear notificación
+    const notificacion = document.createElement('div');
+    notificacion.className = 'notificacion';
+    notificacion.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <span>${mensaje}</span>
     `;
     
-    document.body.appendChild(notif);
+    // Estilos de la notificación
+    notificacion.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #2ecc71;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    `;
     
+    // Agregar al body
+    document.body.appendChild(notificacion);
+    
+    // Remover después de 3 segundos
     setTimeout(() => {
-        notif.remove();
+        notificacion.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(notificacion);
+        }, 300);
     }, 3000);
 }
 
-// Inicializar la aplicación cuando el DOM esté listo
+// Agregar estilos CSS para la animación
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    
+    .product-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .product-image img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .product-info {
+        padding: 20px;
+    }
+    
+    .product-info h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+    }
+    
+    .product-description {
+        color: #666;
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+    
+    .product-price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .price {
+        font-weight: bold;
+        color: #2c3e50;
+        font-size: 1.2em;
+    }
+    
+    .btn-add-to-cart {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .btn-add-to-cart:hover {
+        background: #2980b9;
+    }
+`;
+document.head.appendChild(style);
+
+// Inicializar cuando cargue la página
 document.addEventListener('DOMContentLoaded', function() {
+    cargarProductosDestacados();
     actualizarContadorCarrito();
-    
-    // Renderizar según la página actual
-    if (document.getElementById('featured-products')) {
-        renderizarProductosDestacados();
-    }
-    
-    if (document.getElementById('all-products')) {
-        renderizarTodosProductos();
-    }
-    
-    if (document.getElementById('cart-items')) {
-        renderizarCarrito();
-    }
 });
+
+// Hacer funciones disponibles globalmente
+window.cargarProductosDestacados = cargarProductosDestacados;
+window.actualizarContadorCarrito = actualizarContadorCarrito;
