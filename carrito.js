@@ -21,22 +21,32 @@ document.addEventListener('DOMContentLoaded', function() {
         cartCount.textContent = total;
     }
     
+    // Formatear número a moneda MXN con dos decimales
+    function formatearMoneda(valor) {
+        const num = Number(valor) || 0;
+        return new Intl.NumberFormat('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
+    }
+
     // Calcular totales
     function calcularTotales() {
         let subtotal = 0;
-        
+
         carrito.forEach(producto => {
-            subtotal += producto.precio * producto.cantidad;
+            const precio = Number(producto.precio) || 0;
+            const cantidad = Number(producto.cantidad) || 0;
+            subtotal += precio * cantidad;
         });
-        
-        const envio = 99.00;
+
+        const envio = subtotal > 0 ? 99.00 : 0.00;
         const iva = subtotal * 0.16;
         const total = subtotal + envio + iva;
-        
-        subtotalElement.textContent = `$${subtotal.toLocaleString()} MXN`;
-        ivaElement.textContent = `$${iva.toLocaleString()} MXN`;
-        totalElement.textContent = `$${total.toLocaleString()} MXN`;
-        
+
+        subtotalElement.textContent = `$${formatearMoneda(subtotal)} MXN`;
+        ivaElement.textContent = `$${formatearMoneda(iva)} MXN`;
+        // Mostrar envío también formateado
+        document.getElementById('envio').textContent = `$${formatearMoneda(envio)} MXN`;
+        totalElement.textContent = `$${formatearMoneda(total)} MXN`;
+
         return total;
     }
     
@@ -73,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                     <div class="item-precio">
-                        <span class="precio-unitario">$${producto.precio.toLocaleString()} MXN</span>
+                        <span class="precio-unitario">$${formatearMoneda(producto.precio)} MXN</span>
                         <div class="item-cantidad">
                             <button class="btn-cantidad" onclick="cambiarCantidad(${index}, -1)">
                                 <i class="fas fa-minus"></i>
@@ -83,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
-                        <span class="precio-total">$${(producto.precio * producto.cantidad).toLocaleString()} MXN</span>
+                        <span class="precio-total">$${formatearMoneda(Number(producto.precio) * Number(producto.cantidad))} MXN</span>
                     </div>
                     <div class="item-acciones">
                         <button class="btn-eliminar" onclick="eliminarProducto(${index})">
@@ -95,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             // Actualizar contador de items
-            totalItems.textContent = carrito.reduce((sum, p) => sum + p.cantidad, 0);
+            totalItems.textContent = carrito.reduce((sum, p) => sum + (Number(p.cantidad) || 0), 0);
         }
         
         // Calcular totales
