@@ -25,39 +25,88 @@
         </div>
     </header>
 
-    <!-- Carrito -->
-    <div class="cart-container">
-        <h2 class="section-title">Tu Carrito de Compras</h2>
-        
-        <div id="cart-items">
-            <!-- Los items del carrito se cargarán dinámicamente -->
+    <!-- Contenido del Carrito -->
+    <section class="carrito-section">
+        <div class="container">
+            <h1 class="section-title"><i class="fas fa-shopping-cart"></i> Tu Carrito de Compras</h1>
+            
+            <!-- Mensaje si el carrito está vacío -->
+            <div id="carrito-vacio" class="carrito-vacio">
+                <i class="fas fa-shopping-cart fa-3x"></i>
+                <h2>Tu carrito está vacío</h2>
+                <p>Agrega algunos productos desde nuestra tienda</p>
+                <a href="productos.html" class="btn-primary">
+                    <i class="fas fa-store"></i> Ver Productos
+                </a>
+            </div>
+            
+            <!-- Carrito con productos -->
+            <div id="carrito-contenido" class="carrito-contenido" style="display: none;">
+                <div class="carrito-grid">
+                    <!-- Columna izquierda: Productos -->
+                    <div class="carrito-productos">
+                        <div class="carrito-header">
+                            <h3>Productos (<span id="total-items">0</span>)</h3>
+                        </div>
+                        <div id="carrito-items">
+                            <!-- Los productos se cargan aquí con JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Columna derecha: Resumen -->
+                    <div class="carrito-resumen">
+                        <div class="resumen-card">
+                            <h3><i class="fas fa-receipt"></i> Resumen del Pedido</h3>
+                            
+                            <div class="resumen-detalle">
+                                <div class="resumen-linea">
+                                    <span>Subtotal:</span>
+                                    <span id="subtotal">$0.00 MXN</span>
+                                </div>
+                                <div class="resumen-linea">
+                                    <span>Envío:</span>
+                                    <span id="envio">$99.00 MXN</span>
+                                </div>
+                                <div class="resumen-linea">
+                                    <span>IVA (16%):</span>
+                                    <span id="iva">$0.00 MXN</span>
+                                </div>
+                                <div class="resumen-linea total">
+                                    <span><strong>Total:</strong></span>
+                                    <span><strong id="total">$0.00 MXN</strong></span>
+                                </div>
+                            </div>
+                            
+                            <div class="resumen-acciones">
+                                <a href="productos.html" class="btn-secundario">
+                                    <i class="fas fa-arrow-left"></i> Seguir Comprando
+                                </a>
+                                <button onclick="window.location.href='checkout.html'" class="btn-primary" id="btn-checkout">
+                                    <i class="fas fa-lock"></i> Proceder al Pago
+                                </button>
+                            </div>
+                            
+                            <div class="resumen-seguridad">
+                                <i class="fas fa-shield-alt"></i>
+                                <p>Compra 100% segura. Tus datos están protegidos.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Métodos de pago aceptados -->
+                        <div class="metodos-pago">
+                            <p><i class="fas fa-credit-card"></i> Aceptamos:</p>
+                            <div class="metodos-icons">
+                                <i class="fab fa-cc-visa" title="Visa"></i>
+                                <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                                <i class="fab fa-cc-amex" title="American Express"></i>
+                                <i class="fab fa-paypal" title="PayPal"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="cart-summary">
-            <h3>Resumen del Pedido</h3>
-            <div style="display: flex; justify-content: space-between; margin: 1rem 0;">
-                <span>Subtotal:</span>
-                <span id="cart-total">$0.00</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin: 1rem 0;">
-                <span>Envío:</span>
-                <span>Gratis</span>
-            </div>
-            <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--border-color);">
-            <div class="cart-total" style="display: flex; justify-content: space-between;">
-                <span>Total:</span>
-                <span id="cart-total-final">$0.00</span>
-            </div>
-            <button class="btn-add-to-cart" onclick="procesarCheckout()" style="margin-top: 1rem;">
-                Proceder al Pago
-            </button>
-            <button class="btn-primary" onclick="window.location.href='productos.html'" 
-                    style="margin-top: 1rem; width: 100%; text-align: center; background: transparent; 
-                    color: var(--primary-color); border: 2px solid var(--primary-color);">
-                Seguir Comprando
-            </button>
-        </div>
-    </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
@@ -83,16 +132,6 @@
         </div>
     </footer>
 
-    <script src="productos.js"></script>
-    <script src="app.js"></script>
-    <script>
-        // Actualizar también el total final
-        document.addEventListener('DOMContentLoaded', function() {
-            const totalFinal = document.getElementById('cart-total-final');
-            if (totalFinal) {
-                totalFinal.textContent = document.getElementById('cart-total').textContent;
-            }
-        });
-    </script>
+    <script src="carrito.js"></script>
 </body>
 </html>
